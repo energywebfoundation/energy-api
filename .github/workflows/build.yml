@@ -28,3 +28,4 @@ jobs:
 
     - uses: bahmutov/npm-install@v1
     - run: yarn build
+    - run: yarn lint
