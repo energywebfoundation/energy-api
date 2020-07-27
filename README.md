@@ -9,6 +9,14 @@
 
 Standardized API for reading and storing metered data. Built on top of the InfluxDB time-series database.
 
+## Features
+
+- timeseries unit conversion on store - currently supports `Wh,kWh,MWh,GWh`
+- consecutive reads difference calculation - for e.g can be used to get production ts based on reads
+- date ranges, limits and paging
+- resolution conversion - TBD
+- aggregation functions - TBD
+
 ## Development
 
 ```
