@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "lerna": "^3.17.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "lerna run start --stream",
+    "watch": "lerna run watch --stream",
+    "build": "lerna run build --stream",
+    "test:e2e": "lerna run test:e2e --stream",
+    "lint": "lerna run lint --stream"
+  }
+}
