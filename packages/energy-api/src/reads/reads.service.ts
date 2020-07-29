@@ -11,8 +11,28 @@ export class ReadsService {
 
   private bucket: string;
 
+  private config: ClientOptions;
+
   constructor(private readonly configService: ConfigService) {
-    this.bucket = `${this.configService.get<string>('INFLUXDB_DB')}/autogen`;
+    const db = this.configService.get<string>('INFLUXDB_DB');
+    const url = this.configService.get<string>('INFLUXDB_URL');
+
+    if (!db) {
+      throw new Error('Missing INFLUXDB_DB url');
+    }
+    if (!url) {
+      throw new Error('Missing INFLUXDB_URL url');
+    }
+
+    this.logger.debug(`Using InfluxDB instance on ${url}`);
+
+    this.bucket = `${db}/autogen`;
+    this.config = {
+      url,
+      token: `${this.configService.get<string>(
+        'INFLUXDB_USER',
+      )}:${this.configService.get<string>('INFLUXDB_USER_PASSWORD')}`,
+    };
   }
 
   public async store(meterId: string, measurement: Measurement) {
@@ -77,22 +97,11 @@ export class ReadsService {
   }
 
   private get dbWriter() {
-    return this.db.getWriteApi('', this.bucket);
+    return new InfluxDB(this.config).getWriteApi('', this.bucket);
   }
 
   private get dbReader() {
-    return this.db.getQueryApi('');
-  }
-
-  private get db() {
-    const clientOptions: ClientOptions = {
-      url: this.configService.get<string>('INFLUXDB_URL'),
-      token: `${this.configService.get<string>(
-        'INFLUXDB_USER',
-      )}:${this.configService.get<string>('INFLUXDB_USER_PASSWORD')}`,
-    };
-
-    return new InfluxDB(clientOptions);
+    return new InfluxDB(this.config).getQueryApi('');
   }
 
   private getMultiplier(unit: Unit) {
