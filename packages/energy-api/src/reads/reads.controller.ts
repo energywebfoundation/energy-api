@@ -8,7 +8,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { ReadsQueryDTO } from './reads-query.dto';
+import { FilterDTO } from './filter.dto';
 import { Measurement } from './measurement.dto';
 import { ReadsService } from './reads.service';
 
@@ -20,7 +20,7 @@ export class ReadsController {
   @Get('/:meter')
   public async getReads(
     @Param('meter') meterId: string,
-    @Query() filter: ReadsQueryDTO,
+    @Query() filter: FilterDTO,
   ) {
     const res = await this.readsService.find(meterId, filter);
     return res;
@@ -29,7 +29,7 @@ export class ReadsController {
   @Get('/:meter/difference')
   public async getReadsDifference(
     @Param('meter') meterId: string,
-    @Query() filter: ReadsQueryDTO,
+    @Query() filter: FilterDTO,
   ) {
     const res = await this.readsService.findDifference(meterId, filter);
     return res;
