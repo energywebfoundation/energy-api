@@ -9,6 +9,8 @@
 
 Standardized API for reading and storing metered data. Built on top of the InfluxDB time-series database.
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fenergywebfoundation%2Fenergy-api%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/energywebfoundation/energy-api/goto?ref=master)[![npm](https://img.shields.io/npm/v/@energyweb/energy-api.svg)]
+
 ## Features
 
 - timeseries unit conversion on store - currently supports `Wh,kWh,MWh,GWh`
