@@ -45,3 +45,100 @@ Scripts available in the repository requires Docker to be installed on the targe
 
 1. ./influxdb-init.sh - one time init script to bootstrap InfluxDB configuration
 2. ./influxdb-run.sh - start script
+
+## Running
+
+1. Start API using yarn command
+```
+yarn start
+```
+2. Navigate to http://localhost:3000/api/#/ for API documentationp
+
+## Example queries
+
+### Storing
+
+The POST request below will store:
+
+- 3 smart meter reads with values equal to 120kWh (unit: 1 means kWh), 250kWh and 400kWh for device with device id `device1`
+
+```
+curl --location --request POST 'http://localhost:3000/reads/device1' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "unit": 1,
+    "reads": [
+        {
+            "timestamp": "2020-07-20T00:00:00.000Z",
+            "value": 125
+        },
+        {
+            "timestamp": "2020-07-21T00:00:00.000Z",
+            "value": 250
+        },
+        {
+            "timestamp": "2020-07-22T00:00:00.000Z",
+            "value": 400
+        }
+    ]
+}'
+```
+
+For more information refer to http://localhost:3000/api/#/default/ReadsController_storeReads
+
+### Reading
+
+#### Reads
+
+The GET request below will return previously stored 3 smart meter reads for device with device id `device1`
+
+```
+curl --location --request GET 'http://localhost:3000/reads/device1?start=2020-07-20T00:00:00.000Z&end=2020-07-23T00:00:00.000Z'
+```
+
+will return
+
+```
+[
+      {
+          "timestamp": "2020-07-20T00:00:00.000Z",
+          "value": 125
+      },
+      {
+          "timestamp": "2020-07-21T00:00:00.000Z",
+          "value": 250
+      },
+      {
+          "timestamp": "2020-07-22T00:00:00.000Z",
+          "value": 400
+      }
+  ]
+```
+
+For more information refer to http://localhost:3000/api/#/default/ReadsController_getReads
+
+
+#### Production
+
+The GET request below will return relative values from given time period for device with device id `device1`
+
+```
+curl --location --request GET 'http://localhost:3000/reads/device1/difference?start=2020-07-20T00:00:00.000Z&end=2020-07-23T00:00:00.000Z'
+```
+
+will return
+
+```
+[
+    {
+        "timestamp": "2020-07-21T00:00:00.000Z",
+        "value": 125000
+    },
+    {
+        "timestamp": "2020-07-22T00:00:00.000Z",
+        "value": 150000
+    }
+]
+```
+
+For more information refer to http://localhost:3000/api/#/default/ReadsController_getReadsDifference
