@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class ReadsQueryDTO {
+export class FilterDTO {
   @IsDateString()
   start: string;
 

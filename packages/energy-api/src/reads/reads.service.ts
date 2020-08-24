@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Measurement } from './measurement.dto';
-import { ReadsQueryDTO } from './reads-query.dto';
+import { Measurement, ReadDTO } from './measurement.dto';
+import { FilterDTO } from './filter.dto';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, InfluxDB, Point } from '@influxdata/influxdb-client';
 import { Unit } from './unit.enum';
+import { timeStamp } from 'console';
 
 @Injectable()
 export class ReadsService {
@@ -51,7 +52,7 @@ export class ReadsService {
     await writer.close();
   }
 
-  public async find(meterId: string, filter: ReadsQueryDTO) {
+  public async find(meterId: string, filter: FilterDTO) {
     try {
       const query = this.findByMeterQuery(meterId, filter);
 
@@ -60,7 +61,13 @@ export class ReadsService {
         _value: string;
       }>(query);
 
-      return data.map(record => [record._time, record._value]);
+      return data.map(
+        record =>
+          ({
+            timestamp: new Date(record._time),
+            value: Number(record._value),
+          } as ReadDTO),
+      );
     } catch (e) {
       this.logger.error(e.message);
     }
@@ -68,7 +75,7 @@ export class ReadsService {
     return [];
   }
 
-  public async findDifference(meterId: string, filter: ReadsQueryDTO) {
+  public async findDifference(meterId: string, filter: FilterDTO) {
     try {
       const query = `${this.findByMeterQuery(meterId, filter)}
       |> difference()
@@ -79,7 +86,13 @@ export class ReadsService {
         _value: string;
       }>(query);
 
-      return data.map(record => [record._time, record._value]);
+      return data.map(
+        record =>
+          ({
+            timestamp: new Date(record._time),
+            value: Number(record._value),
+          } as ReadDTO),
+      );
     } catch (e) {
       this.logger.error(e.message);
     }
@@ -87,7 +100,7 @@ export class ReadsService {
     return [];
   }
 
-  private findByMeterQuery(meterId: string, filter: ReadsQueryDTO) {
+  private findByMeterQuery(meterId: string, filter: FilterDTO) {
     return `
     from(bucket: "${this.bucket}")
     |> range(start: ${filter.start}, stop: ${filter.end})

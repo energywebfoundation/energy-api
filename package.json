@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "start": "lerna run start --stream",
-    "watch": "lerna run watch --stream",
+    "watch": "lerna run start:dev --stream",
     "build": "lerna run build --stream",
     "test:e2e": "lerna run test:e2e --stream",
     "lint": "lerna run lint --stream"
