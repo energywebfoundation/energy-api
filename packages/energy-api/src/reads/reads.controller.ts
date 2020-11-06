@@ -7,12 +7,15 @@ import {
   Body,
   UseInterceptors,
   ClassSerializerInterceptor,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { FilterDTO } from './filter.dto';
 import { Measurement } from './measurement.dto';
 import { ReadsService } from './reads.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
+@UsePipes(ValidationPipe)
 @Controller('reads')
 export class ReadsController {
   constructor(private readonly readsService: ReadsService) {}
