@@ -1,38 +1,45 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Measurement, ReadDTO } from './measurement.dto';
 import { FilterDTO } from './filter.dto';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, InfluxDB, Point } from '@influxdata/influxdb-client';
 import { Unit } from './unit.enum';
-import { timeStamp } from 'console';
 
 @Injectable()
-export class ReadsService {
+export class ReadsService implements OnModuleInit {
   private readonly logger = new Logger(ReadsService.name);
 
   private bucket: string;
+  private organization: string;
 
   private config: ClientOptions;
 
-  constructor(private readonly configService: ConfigService) {
-    const db = this.configService.get<string>('INFLUXDB_DB');
-    const url = this.configService.get<string>('INFLUXDB_URL');
+  constructor(private readonly configService: ConfigService) {}
 
-    if (!db) {
-      throw new Error('Missing INFLUXDB_DB url');
-    }
+  public async onModuleInit() {
+    const url = this.configService.get<string>('INFLUXDB_URL');
+    const token = this.configService.get<string>('INFLUXDB_TOKEN');
+    const organization = this.configService.get<string>('INFLUXDB_ORG') ?? '';
+    const bucket = this.configService.get<string>('INFLUXDB_BUCKET');
+
     if (!url) {
-      throw new Error('Missing INFLUXDB_URL url');
+      throw new Error('Missing INFLUXDB_URL parameter');
+    }
+    if (!token) {
+      throw new Error('Missing INFLUXDB_TOKEN parameter');
+    }
+    if (!bucket) {
+      throw new Error('Missing INFLUXDB_BUCKET parameter');
     }
 
     this.logger.debug(`Using InfluxDB instance on ${url}`);
 
-    this.bucket = `${db}/autogen`;
+    this.bucket = bucket;
+    this.organization = organization;
+
     this.config = {
       url,
-      token: `${this.configService.get<string>(
-        'INFLUXDB_USER',
-      )}:${this.configService.get<string>('INFLUXDB_USER_PASSWORD')}`,
+      token,
     };
   }
 
@@ -70,6 +77,7 @@ export class ReadsService {
       );
     } catch (e) {
       this.logger.error(e.message);
+      throw e;
     }
 
     return [];
@@ -110,11 +118,14 @@ export class ReadsService {
   }
 
   private get dbWriter() {
-    return new InfluxDB(this.config).getWriteApi('', this.bucket);
+    return new InfluxDB(this.config).getWriteApi(
+      this.organization,
+      this.bucket,
+    );
   }
 
   private get dbReader() {
-    return new InfluxDB(this.config).getQueryApi('');
+    return new InfluxDB(this.config).getQueryApi(this.organization);
   }
 
   private getMultiplier(unit: Unit) {
