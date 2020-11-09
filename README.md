@@ -33,8 +33,13 @@ yarn build
 `.env`
 
 ```
-INFLUXDB_DB=energy
 INFLUXDB_URL=http://localhost:8086
+INFLUXDB_TOKEN=admin:admin
+INFLUXDB_ORG=
+INFLUXDB_BUCKET=energy/autogen
+
+# Optional for influxdb-init.sh script
+INFLUXDB_DB=energy
 INFLUXDB_ADMIN_USER=admin
 INFLUXDB_ADMIN_PASSWORD=admin
 INFLUXDB_USER=api
