@@ -1,0 +1,162 @@
+openapi: "3.0.0"
+info:
+  title: "Energy API"
+  description: "Standardized API for reading and storing metered data"
+  version: "0.1"
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    ReadDTO:
+      type: "object"
+      properties:
+        timestamp:
+          type: "string"
+          format: "date-time"
+          example: "2020-01-01T00:00:00Z"
+          description: "Measurement timestamp"
+        value:
+          type: "integer"
+          example: 10000000
+          description: "Measurement value in Wh"
+      required:
+        - "timestamp"
+        - "value"
+    Unit:
+      type: "string"
+      enum:
+        - "Wh"
+        - "kWh"
+        - "MWh"
+        - "GWh"
+    Measurement:
+      type: "object"
+      properties:
+        reads:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ReadDTO"
+        unit:
+          $ref: "#/components/schemas/Unit"
+      required:
+        - "reads"
+        - "unit"
+paths:
+  /meter-reads/{meter}:
+    get:
+      operationId: "ReadsController_getReads"
+      parameters:
+        - name: "meter"
+          required: true
+          in: "path"
+          schema:
+            type: "string"
+        - name: "start"
+          required: true
+          in: "query"
+          example: "2020-01-01T00:00:00Z"
+          schema:
+            format: "date-time"
+            type: "string"
+        - name: "end"
+          required: true
+          in: "query"
+          example: "2020-01-02T00:00:00Z"
+          schema:
+            format: "date-time"
+            type: "string"
+        - name: "limit"
+          required: false
+          in: "query"
+          schema:
+            minimum: 0
+            maximum: 10000
+            default: 10000
+            type: "integer"
+        - name: "offset"
+          required: false
+          in: "query"
+          schema:
+            minimum: 0
+            default: 0
+            type: "integer"
+      responses:
+        200:
+          description: "Returns time-series of meter reads"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ReadDTO"
+      tags:
+        - "meter-reads"
+    post:
+      operationId: "ReadsController_storeReads"
+      parameters:
+        - name: "meter"
+          required: true
+          in: "path"
+          schema:
+            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Measurement"
+      responses:
+        201:
+          description: ""
+      tags:
+        - "meter-reads"
+  /meter-reads/{meter}/difference:
+    get:
+      operationId: "ReadsController_getReadsDifference"
+      parameters:
+        - name: "meter"
+          required: true
+          in: "path"
+          schema:
+            type: "string"
+        - name: "start"
+          required: true
+          in: "query"
+          example: "2020-01-01T00:00:00Z"
+          schema:
+            format: "date-time"
+            type: "string"
+        - name: "end"
+          required: true
+          in: "query"
+          example: "2020-01-02T00:00:00Z"
+          schema:
+            format: "date-time"
+            type: "string"
+        - name: "limit"
+          required: false
+          in: "query"
+          schema:
+            minimum: 0
+            maximum: 10000
+            default: 10000
+            type: "integer"
+        - name: "offset"
+          required: false
+          in: "query"
+          schema:
+            minimum: 0
+            default: 0
+            type: "integer"
+      responses:
+        200:
+          description: "Returns time-series of difference between subsequent meter reads"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ReadDTO"
+      tags:
+        - "meter-reads"
