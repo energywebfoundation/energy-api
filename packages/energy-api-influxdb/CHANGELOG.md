@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.5.1 (2020-12-01)
+
+**Note:** Version bump only for package @energyweb/energy-api-influxdb
+
+
+
+
+
 # [0.2.0](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api@0.1.0...@energyweb/energy-api@0.2.0) (2020-11-09)
 
 
