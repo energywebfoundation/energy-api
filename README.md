@@ -9,15 +9,33 @@
 
 Standardized API for reading and storing metered data. Built on top of the InfluxDB time-series database.
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fenergywebfoundation%2Fenergy-api%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/energywebfoundation/energy-api/goto?ref=master)[![npm](https://img.shields.io/npm/v/@energyweb/energy-api.svg)](https://www.npmjs.com/package/@energyweb/energy-api) 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fenergywebfoundation%2Fenergy-api%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/energywebfoundation/energy-api/goto?ref=master)
 
 ## Features
 
-- timeseries unit conversion on store - currently supports `Wh,kWh,MWh,GWh`
+- time-series unit conversion on store - currently supports `Wh,kWh,MWh,GWh`
 - consecutive reads difference calculation - for e.g can be used to get production ts based on reads
 - date ranges, limits and paging
 - resolution conversion - TBD
 - aggregation functions - TBD
+
+## Projects
+
+This repository contains 3 items that serve different purpose.
+
+### Specification
+
+OpenAPI specs file can be found in `specs/schema.yaml`. This can also be browsed by visiting https://energywebfoundation.github.io/energy-api/specs/
+
+### Reference implementation using InfluxDB
+
+[![npm](https://img.shields.io/npm/v/@energyweb/energy-api-influxdb.svg)](https://www.npmjs.com/package/@energyweb/energy-api-influxdb)
+
+Reference implementation package can be found in `packages/energy-api-influxdb`. This project is also available as NPM package in case you wish to use it in your Energy API implementation.
+
+### Example application
+
+This can be found in `packages/energy-api-app`. The purpose of this application is to depict example integration using reference implementation.
 
 ## Development
 
@@ -56,21 +74,21 @@ Scripts available in the repository requires Docker to be installed on the targe
 ## Running
 
 1. Start API using yarn command
+
 ```
 yarn start
 ```
-2. Navigate to http://localhost:3000/api/#/ for API documentationp
 
 ## Example queries
 
-### Storing
+### Storing meter reads
 
 The POST request below will store:
 
 - 3 smart meter reads with values equal to 120kWh (unit: 1 means kWh), 250kWh and 400kWh for device with device id `device1`
 
 ```
-curl --location --request POST 'http://localhost:3000/reads/device1' \
+curl --location --request POST 'http://localhost:3000/meter-reads/device1' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "unit": 1,
@@ -93,9 +111,7 @@ curl --location --request POST 'http://localhost:3000/reads/device1' \
 
 For more information refer to http://localhost:3000/api/#/default/ReadsController_storeReads
 
-### Reading
-
-#### Reads
+### Query meter reads
 
 The GET request below will return previously stored 3 smart meter reads for device with device id `device1`
 
@@ -124,8 +140,7 @@ will return
 
 For more information refer to http://localhost:3000/api/#/default/ReadsController_getReads
 
-
-#### Production
+### Query difference
 
 The GET request below will return relative values from given time period for device with device id `device1`
 
@@ -149,3 +164,62 @@ will return
 ```
 
 For more information refer to http://localhost:3000/api/#/default/ReadsController_getReadsDifference
+
+## How to build your own application using @energyweb/energy-api-influxdb
+
+` @energyweb/energy-api-influxdb` NPM package exposes the reference implementation using InfluxDB as data layer for storing and quering meter reads.
+
+- `ReadsService` - a service that implements communication with InfluxDB
+- `BaseReadsController` - an abstract controller that can be used in your application
+
+An example application controller build using Nest.JS framework and `@energyweb/energy-api-influxdb`. For full example refer to `packages/energy-api-app`
+
+```typescript
+import {
+  BaseReadsController,
+  FilterDTO,
+  Measurement,
+  ReadDTO,
+  ReadsService,
+} from "@energyweb/energy-api-influxdb";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from "@nestjs/common";
+
+@Controller("meter-reads")
+export class ReadsController extends BaseReadsController {
+  constructor(readsService: ReadsService) {
+    super(readsService);
+  }
+
+  @Get("/:meter")
+  public async getReads(
+    @Param("meter") meterId: string,
+    @Query() filter: FilterDTO
+  ) {
+    return super.getReads(meterId, filter);
+  }
+
+  @Get("/:meter/difference")
+  public async getReadsDifference(
+    @Param("meter") meterId: string,
+    @Query() filter: FilterDTO
+  ) {
+    return super.getReadsDifference(meterId, filter);
+  }
+
+  @Post("/:meter")
+  public async storeReads(
+    @Param("meter") meterId: string,
+    @Body() measurement: Measurement
+  ) {
+    await super.storeReads(meterId, measurement);
+  }
+}
+```
