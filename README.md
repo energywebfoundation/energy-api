@@ -17,7 +17,7 @@ Standardized API for reading and storing metered data. Built on top of the Influ
 - consecutive reads difference calculation - for e.g can be used to get production ts based on reads
 - date ranges, limits and paging
 - resolution conversion - TBD
-- aggregation functions - TBD
+- aggregation functions - aggregate using sum or mean over defined window
 
 ## Projects
 
