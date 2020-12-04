@@ -1,21 +1,21 @@
 import {
+  Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
-  Query,
   Post,
-  Body,
+  Query,
   UseInterceptors,
-  ClassSerializerInterceptor,
-  ValidationPipe,
   UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { FilterDTO } from './filter.dto';
-import { Measurement } from './measurement.dto';
+
+import { AggregateFilterDTO, FilterDTO, MeasurementDTO } from './dto';
 import { ReadsService } from './reads.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
-@UsePipes(ValidationPipe)
+@UsePipes(new ValidationPipe({ transform: true }))
 @Controller()
 export abstract class BaseReadsController {
   constructor(private readonly readsService: ReadsService) {}
@@ -38,10 +38,19 @@ export abstract class BaseReadsController {
     return res;
   }
 
+  @Get('/:meter/aggregate')
+  public async getReadsAggregates(
+    @Param('meter') meterId: string,
+    @Query() filter: AggregateFilterDTO,
+  ) {
+    const res = await this.readsService.aggregate(meterId, filter);
+    return res;
+  }
+
   @Post('/:meter')
   public async storeReads(
     @Param('meter') meterId: string,
-    @Body() measurement: Measurement,
+    @Body() measurement: MeasurementDTO,
   ) {
     await this.readsService.store(meterId, measurement);
   }

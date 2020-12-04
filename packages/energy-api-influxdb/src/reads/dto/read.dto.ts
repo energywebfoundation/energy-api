@@ -1,11 +1,4 @@
-import { Unit } from './unit.enum';
-import {
-  IsEnum,
-  IsDate,
-  ValidateNested,
-  IsNumber,
-  IsPositive,
-} from 'class-validator';
+import { IsDate, IsNumber, IsPositive } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -28,15 +21,4 @@ export class ReadDTO {
     description: 'Measurement value in Wh',
   })
   value: number;
-}
-
-export class Measurement {
-  @ValidateNested()
-  @Type(() => ReadDTO)
-  @ApiProperty({ type: [ReadDTO] })
-  reads: ReadDTO[];
-
-  @IsEnum(Unit)
-  @ApiProperty({ enum: Unit, enumName: 'Unit' })
-  unit: Unit;
 }
