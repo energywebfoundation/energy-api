@@ -14,7 +14,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('meter-reads')
 @ApiTags('meter-reads')
