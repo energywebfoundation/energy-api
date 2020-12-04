@@ -11,12 +11,12 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('Energy API')
     .setDescription('Standardized API for reading and storing metered data')
-    .setVersion('0.1')
+    .setVersion('0.6')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  // fs.writeFileSync('./src/schema.yaml', Yaml.stringify(document));
+  fs.writeFileSync('./schema.yaml', Yaml.stringify(document));
 
   await app.listen(3000);
 }
