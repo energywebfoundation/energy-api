@@ -1,7 +1,9 @@
 import {
+  AggregateFilterDTO,
   BaseReadsController,
   FilterDTO,
-  Measurement,
+  MeasurementDTO,
+  AggregatedReadDTO,
   ReadDTO,
   ReadsService,
 } from '@energyweb/energy-api-influxdb';
@@ -50,10 +52,24 @@ export class ReadsController extends BaseReadsController {
     return super.getReadsDifference(meterId, filter);
   }
 
+  @Get('/:meter/aggregate')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: [AggregatedReadDTO],
+    description:
+      'Returns aggregated time-series of difference between subsequent meter reads',
+  })
+  public async getReadsAggregates(
+    @Param('meter') meterId: string,
+    @Query() filter: AggregateFilterDTO,
+  ) {
+    return super.getReadsAggregates(meterId, filter);
+  }
+
   @Post('/:meter')
   public async storeReads(
     @Param('meter') meterId: string,
-    @Body() measurement: Measurement,
+    @Body() measurement: MeasurementDTO,
   ) {
     await super.storeReads(meterId, measurement);
   }

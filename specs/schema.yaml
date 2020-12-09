@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   title: "Energy API"
   description: "Standardized API for reading and storing metered data"
-  version: "0.1"
+  version: "0.6"
   contact: {}
 tags: []
 servers: []
@@ -23,6 +23,32 @@ components:
       required:
         - "timestamp"
         - "value"
+    Aggregate:
+      type: "string"
+      enum:
+        - "sum"
+        - "mean"
+    AggregatedReadDTO:
+      type: "object"
+      properties:
+        start:
+          type: "string"
+          format: "date-time"
+          example: "2020-01-01T00:00:00Z"
+          description: "Measurement start timestamp"
+        stop:
+          type: "string"
+          format: "date-time"
+          example: "2020-01-02T00:00:00Z"
+          description: "Measurement stop timestamp"
+        value:
+          type: "integer"
+          example: 10000000
+          description: "Measurement value in Wh"
+      required:
+        - "start"
+        - "stop"
+        - "value"
     Unit:
       type: "string"
       enum:
@@ -30,13 +56,13 @@ components:
         - "kWh"
         - "MWh"
         - "GWh"
-    Measurement:
+    MeasurementDTO:
       type: "object"
       properties:
         reads:
           type: "array"
           items:
-            $ref: "#/components/schemas/ReadDTO"
+            type: "array"
         unit:
           $ref: "#/components/schemas/Unit"
       required:
@@ -105,7 +131,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Measurement"
+              $ref: "#/components/schemas/MeasurementDTO"
       responses:
         201:
           description: ""
@@ -158,5 +184,51 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/ReadDTO"
+      tags:
+        - "meter-reads"
+  /meter-reads/{meter}/aggregate:
+    get:
+      operationId: "ReadsController_getReadsAggregates"
+      parameters:
+        - name: "meter"
+          required: true
+          in: "path"
+          schema:
+            type: "string"
+        - name: "start"
+          required: true
+          in: "query"
+          example: "2020-01-01T00:00:00Z"
+          schema:
+            format: "date-time"
+            type: "string"
+        - name: "end"
+          required: true
+          in: "query"
+          example: "2020-01-02T00:00:00Z"
+          schema:
+            format: "date-time"
+            type: "string"
+        - name: "window"
+          required: true
+          in: "query"
+          example: "1mo"
+          description: "An aggregation window duration. Possible values: m = minute, h=hours, d=days, w=weeks, mo=months, y=years for e.g 1d, 15m, 3mo, 1y"
+          schema:
+            type: "string"
+        - name: "aggregate"
+          required: true
+          in: "query"
+          schema:
+            $ref: "#/components/schemas/Aggregate"
+      responses:
+        200:
+          description: "Returns aggregated time-series of difference between subsequent meter reads"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/AggregatedReadDTO"
       tags:
         - "meter-reads"

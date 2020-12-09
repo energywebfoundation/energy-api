@@ -1,6 +1,11 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Measurement, ReadDTO } from './measurement.dto';
-import { FilterDTO } from './filter.dto';
+import {
+  MeasurementDTO,
+  ReadDTO,
+  FilterDTO,
+  AggregateFilterDTO,
+  AggregatedReadDTO,
+} from './dto';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, InfluxDB, Point } from '@influxdata/influxdb-client';
 import { Unit } from './unit.enum';
@@ -43,7 +48,7 @@ export class ReadsService implements OnModuleInit {
     };
   }
 
-  public async store(meterId: string, measurement: Measurement) {
+  public async store(meterId: string, measurement: MeasurementDTO) {
     const multiplier = this.getMultiplier(measurement.unit);
 
     const points = measurement.reads.map((m) =>
@@ -59,22 +64,32 @@ export class ReadsService implements OnModuleInit {
     await writer.close();
   }
 
+  public async aggregate(
+    meterId: string,
+    filter: AggregateFilterDTO,
+  ): Promise<AggregatedReadDTO[]> {
+    try {
+      const query = `
+      from(bucket: "${this.bucket}")
+      |> range(start: ${filter.start}, stop: ${filter.end})
+      |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
+      |> difference()
+      |> window(every: ${filter.window})
+      |> ${filter.aggregate}()
+      `;
+
+      return this.executeAggregated(query);
+    } catch (e) {
+      this.logger.error(e.message);
+      throw e;
+    }
+  }
+
   public async find(meterId: string, filter: FilterDTO) {
     try {
       const query = this.findByMeterQuery(meterId, filter);
 
-      const data = await this.dbReader.collectRows<{
-        _time: string;
-        _value: string;
-      }>(query);
-
-      return data.map(
-        (record) =>
-          ({
-            timestamp: new Date(record._time),
-            value: Number(record._value),
-          } as ReadDTO),
-      );
+      return this.execute(query);
     } catch (e) {
       this.logger.error(e.message);
       throw e;
@@ -87,18 +102,7 @@ export class ReadsService implements OnModuleInit {
       |> difference()
       `;
 
-      const data = await this.dbReader.collectRows<{
-        _time: string;
-        _value: string;
-      }>(query);
-
-      return data.map(
-        (record) =>
-          ({
-            timestamp: new Date(record._time),
-            value: Number(record._value),
-          } as ReadDTO),
-      );
+      return this.execute(query);
     } catch (e) {
       this.logger.error(e.message);
       throw e;
@@ -112,6 +116,32 @@ export class ReadsService implements OnModuleInit {
     |> limit(n: ${filter.limit}, offset: ${filter.offset})
     |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
     `;
+  }
+
+  private async execute(query: string): Promise<ReadDTO[]> {
+    const data = await this.dbReader.collectRows<{
+      _time: string;
+      _value: string;
+    }>(query);
+
+    return data.map((record) => ({
+      timestamp: new Date(record._time),
+      value: Number(record._value),
+    }));
+  }
+
+  private async executeAggregated(query: string): Promise<AggregatedReadDTO[]> {
+    const data = await this.dbReader.collectRows<{
+      _start: string;
+      _stop: string;
+      _value: string;
+    }>(query);
+
+    return data.map((record) => ({
+      start: new Date(record._start),
+      stop: new Date(record._stop),
+      value: Number(record._value),
+    }));
   }
 
   private get dbWriter() {
