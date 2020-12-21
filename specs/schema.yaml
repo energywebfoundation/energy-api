@@ -62,7 +62,7 @@ components:
         reads:
           type: "array"
           items:
-            type: "array"
+            $ref: "#/components/schemas/ReadDTO"
         unit:
           $ref: "#/components/schemas/Unit"
       required:
@@ -134,7 +134,7 @@ paths:
               $ref: "#/components/schemas/MeasurementDTO"
       responses:
         201:
-          description: ""
+          description: "Creates meter reads"
       tags:
         - "meter-reads"
   /meter-reads/{meter}/difference:
