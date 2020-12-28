@@ -16,7 +16,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('meter-reads')
 @ApiTags('meter-reads')
@@ -67,6 +72,8 @@ export class ReadsController extends BaseReadsController {
   }
 
   @Post('/:meter')
+  @ApiBody({ type: MeasurementDTO })
+  @ApiCreatedResponse({ description: 'Creates meter reads' })
   public async storeReads(
     @Param('meter') meterId: string,
     @Body() measurement: MeasurementDTO,
