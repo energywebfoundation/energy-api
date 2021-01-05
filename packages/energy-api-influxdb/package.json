@@ -1,6 +1,6 @@
 {
   "name": "@energyweb/energy-api-influxdb",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "",
   "author": "EnergyWeb DevHub GmbH; Piotr Kosinski, piotr.kosinski@energyweb.org",
   "license": "GPL-3.0-or-later",
@@ -29,8 +29,8 @@
     "@nestjs/cli": "7.5.4",
     "@nestjs/schematics": "7.2.5",
     "@nestjs/testing": "7.6.3",
-    "@types/express": "4.17.9",
     "@types/chai": "4.2.14",
+    "@types/express": "4.17.9",
     "@types/luxon": "1.25.0",
     "@types/mocha": "8.0.4",
     "@types/node": "13.1.6",

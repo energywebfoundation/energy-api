@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-influxdb@0.6.0...@energyweb/energy-api-influxdb@0.6.1) (2021-01-05)
+
+
+### Bug Fixes
+
+* **energy-api-influxdb:** Fixed the swagger Post request issue and updated the package.json for latest semantic versions ([98ba62c](https://github.com/energywebfoundation/energy-api/commit/98ba62c75a1e9a5b85e22df0a2abce5ca656b97b))
+
+
+
+
+
 # [0.6.0](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-influxdb@0.5.1...@energyweb/energy-api-influxdb@0.6.0) (2020-12-15)
 
 
