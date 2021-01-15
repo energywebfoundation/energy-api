@@ -47,7 +47,7 @@
     "mocha": "8.2.1",
     "prettier": "2.2.1",
     "superagent-use": "0.1.0",
-    "supertest": "6.0.1",
+    "supertest": "6.1.1",
     "supertest-capture-error": "1.0.0",
     "ts-node": "9.1.0",
     "typescript": "4.1.2"
