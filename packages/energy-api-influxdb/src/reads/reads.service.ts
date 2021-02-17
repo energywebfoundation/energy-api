@@ -73,7 +73,7 @@ export class ReadsService implements OnModuleInit {
       from(bucket: "${this.bucket}")
       |> range(start: ${filter.start}, stop: ${filter.end})
       |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
-      |> difference()
+      ${filter.difference ? '|> difference()' : ''}
       |> window(every: ${filter.window})
       |> ${filter.aggregate}()
       `;

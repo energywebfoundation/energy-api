@@ -96,6 +96,26 @@ describe('ReadsController (e2e)', () => {
       });
   });
 
+  it('should return aggregated monthly sum without calculating difference', async () => {
+    await request(app)
+      .get('/meter-reads/M1/aggregate')
+      .query({
+        start: new Date('2020-01-01').toISOString(),
+        end: new Date('2020-03-01').toISOString(),
+        window: '1mo',
+        aggregate: Aggregate.Sum,
+        difference: false,
+      })
+      .expect(200)
+      .expect((res) => {
+        const reads = res.body as ReadDTO[];
+
+        expect(reads).to.have.length(2);
+        expect(reads[0].value).to.equal((1700 + 1500) * 10 ** 3);
+        expect(reads[1].value).to.equal((2000 + 2500) * 10 ** 3);
+      });
+  });
+
   it('should return aggregated monthly sum', async () => {
     await request(app)
       .get('/meter-reads/M1/aggregate')
@@ -104,6 +124,7 @@ describe('ReadsController (e2e)', () => {
         end: new Date('2020-03-01').toISOString(),
         window: '1mo',
         aggregate: Aggregate.Sum,
+        difference: true,
       })
       .expect(200)
       .expect((res) => {
@@ -123,6 +144,7 @@ describe('ReadsController (e2e)', () => {
         end: new Date('2020-03-01').toISOString(),
         window: '1y',
         aggregate: Aggregate.Sum,
+        difference: true,
       })
       .expect(200)
       .expect((res) => {
