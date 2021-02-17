@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString, Matches } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 import { Aggregate } from '../aggregate.enum';
 import { RangeFilterDTO } from './range-filter.dto';
@@ -18,4 +25,14 @@ export class AggregateFilterDTO extends RangeFilterDTO {
   @IsEnum(Aggregate)
   @ApiProperty({ enum: Aggregate, enumName: 'Aggregate' })
   aggregate: Aggregate;
+
+  @IsBoolean()
+  @Transform((value) => value === 'true')
+  @IsOptional()
+  @ApiProperty({
+    type: Boolean,
+    description:
+      'When "true" it will calculate the difference between reads before applying aggregation functions',
+  })
+  difference?: boolean;
 }

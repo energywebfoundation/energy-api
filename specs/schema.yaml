@@ -221,6 +221,12 @@ paths:
           in: "query"
           schema:
             $ref: "#/components/schemas/Aggregate"
+        - name: "difference"
+          required: true
+          in: "query"
+          description: "When \"true\" it will calculate the difference between reads before applying aggregation functions"
+          schema:
+            type: "boolean"
       responses:
         200:
           description: "Returns aggregated time-series of difference between subsequent meter reads"
