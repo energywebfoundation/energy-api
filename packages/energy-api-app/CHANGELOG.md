@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-app@0.2.1...@energyweb/energy-api-app@0.2.2) (2021-02-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @nestjs/config to v0.6.3 ([c82c48c](https://github.com/energywebfoundation/energy-api/commit/c82c48c25770846b7b42ecadf04d764ee72da4fd))
+* **deps:** update dependency @nestjs/swagger to v4.7.13 ([a39cc52](https://github.com/energywebfoundation/energy-api/commit/a39cc52b91e04673b1842c60ec8eb63ea2c55a2b))
+
+
+
+
+
 ## [0.2.1](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-app@0.2.0...@energyweb/energy-api-app@0.2.1) (2021-01-05)
 
 
