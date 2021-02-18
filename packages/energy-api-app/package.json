@@ -1,6 +1,6 @@
 {
   "name": "@energyweb/energy-api-app",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An example hosted API using @energyweb/energy-api",
   "author": "EnergyWeb DevHub GmbH; Piotr Kosinski, piotr.kosinski@energyweb.org",
   "license": "GPL-3.0-or-later",
@@ -17,7 +17,7 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@energyweb/energy-api-influxdb": "0.6.1",
+    "@energyweb/energy-api-influxdb": "0.7.0",
     "@nestjs/common": "7.6.12",
     "@nestjs/config": "0.6.3",
     "@nestjs/core": "7.6.12",
