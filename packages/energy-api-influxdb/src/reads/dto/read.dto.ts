@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsPositive } from 'class-validator';
+import { IsDate, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -14,7 +14,6 @@ export class ReadDTO {
   timestamp: Date;
 
   @IsNumber()
-  @IsPositive()
   @ApiProperty({
     type: 'integer',
     example: 10000000,
