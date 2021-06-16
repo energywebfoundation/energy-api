@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-influxdb@0.7.0...@energyweb/energy-api-influxdb@0.7.1) (2021-06-16)
+
+
+### Bug Fixes
+
+* **energy-api-influxdb:** make ReadDTO properly validated, make it accepts negative values ([146cde0](https://github.com/energywebfoundation/energy-api/commit/146cde0b7e1c7ae35df6543c1f08e7a8e8a46a90))
+
+
+
+
+
 # [0.7.0](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-influxdb@0.6.1...@energyweb/energy-api-influxdb@0.7.0) (2021-02-18)
 
 
