@@ -6,6 +6,7 @@ import {
   FilterDTO,
   MeasurementDTO,
   ReadsService,
+  StartPeriodDTO,
 } from '../src';
 
 @Controller('meter-reads')
@@ -36,6 +37,15 @@ export class ReadsController extends BaseReadsController {
     @Query() filter: AggregateFilterDTO,
   ) {
     return super.getReadsAggregates(meterId, filter);
+  }
+
+  @Get('/:meter/last')
+  public async getLastRead(
+    @Param('meter') meterId: string,
+    @Query() filter: StartPeriodDTO,
+  ) {
+    const res = await super.getLastRead(meterId, filter);
+    return res;
   }
 
   @Post('/:meter')

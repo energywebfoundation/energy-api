@@ -154,4 +154,28 @@ describe('ReadsController (e2e)', () => {
         expect(reads[0].value).to.equal((2500 - 1500) * 10 ** 3);
       });
   });
+
+  it('should return last meter read', async () => {
+    const today = new Date();
+    today.setHours(today.getHours() - 2);
+    const date = today.toISOString();
+    const measurement = new MeasurementDTO();
+    measurement.unit = Unit.kWh;
+    measurement.reads = [{ timestamp: today, value: 1750 }];
+
+    await request(app)
+      .post('/meter-reads/M1')
+      .send(measurement)
+      .expect(HttpStatus.CREATED);
+
+    await request(app)
+      .get('/meter-reads/M1/last')
+      .expect(200)
+      .expect((res) => {
+        const reads = res.body as ReadDTO[];
+        expect(reads).to.have.length(1);
+        expect(reads[0].timestamp).to.equal(date);
+        expect(reads[0].value).to.equal(1750 * 10 ** 3);
+      });
+  });
 });

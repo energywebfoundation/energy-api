@@ -9,6 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, InfluxDB, Point } from '@influxdata/influxdb-client';
 import { Unit } from './unit.enum';
+import { AllowedDurationType } from './allowed-duration.type';
 
 @Injectable()
 export class ReadsService implements OnModuleInit {
@@ -96,6 +97,20 @@ export class ReadsService implements OnModuleInit {
     }
   }
 
+  public async findLastRead(
+    meterId: string,
+    startDuration?: AllowedDurationType,
+  ) {
+    try {
+      const query = this.findLastReadByMeterQuery(meterId, startDuration);
+
+      return this.execute(query);
+    } catch (e) {
+      this.logger.error(e.message);
+      throw e;
+    }
+  }
+
   public async findDifference(meterId: string, filter: FilterDTO) {
     try {
       const query = `${this.findByMeterQuery(meterId, filter)}
@@ -115,6 +130,19 @@ export class ReadsService implements OnModuleInit {
     |> range(start: ${filter.start}, stop: ${filter.end})
     |> limit(n: ${filter.limit}, offset: ${filter.offset})
     |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
+    `;
+  }
+
+  public findLastReadByMeterQuery(
+    meterId: string,
+    startDuration?: AllowedDurationType,
+  ) {
+    const start = startDuration ? `-${startDuration}` : '-1d';
+    return `
+    from(bucket: "${this.bucket}")
+    |> range(start: ${start}, stop: now())
+    |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
+    |> last()
     `;
   }
 
