@@ -7,7 +7,9 @@
   <br>
 </h1>
 
-Standardized API for reading and storing metered data. Built on top of the InfluxDB time-series database.
+Standardized API for reading and storing metered data. Built on top of the InfluxDB time-series database. Energy API is designed to be used as either standalone service or part of other APIs. Currently it being used on various EWF projects like https://github.com/energywebfoundation/origin and its derivative projects.
+
+It is **not** the SaaS offerred by Energy Web Foundation.
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fenergywebfoundation%2Fenergy-api%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/energywebfoundation/energy-api/goto?ref=master)
 
