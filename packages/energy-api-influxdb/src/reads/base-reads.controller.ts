@@ -52,12 +52,12 @@ export abstract class BaseReadsController {
     return res;
   }
 
-  @Get('/:meter/last')
-  public async getLastRead(
+  @Get('/:meter/latest')
+  public async getLatestRead(
     @Param('meter') meterId: string,
     @Query() filter: StartPeriodDTO,
   ) {
-    const res = await this.readsService.findLastRead(meterId, filter?.start);
+    const res = await this.readsService.findLatestRead(meterId, filter?.start);
     return res;
   }
 

@@ -156,12 +156,22 @@ describe('ReadsController (e2e)', () => {
   });
 
   it('should return last meter read', async () => {
-    const today = new Date();
-    today.setHours(today.getHours() - 2);
-    const date = today.toISOString();
+    const twoHoursAgo = new Date();
+    twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+    const fiveHoursAgo = new Date();
+    fiveHoursAgo.setHours(fiveHoursAgo.getHours() - 5);
+    const tenHoursAgo = new Date();
+    tenHoursAgo.setHours(tenHoursAgo.getHours() - 10);
+
+    const latest = twoHoursAgo.toISOString();
     const measurement = new MeasurementDTO();
+
     measurement.unit = Unit.kWh;
-    measurement.reads = [{ timestamp: today, value: 1750 }];
+    measurement.reads = [
+      { timestamp: tenHoursAgo, value: 1550 },
+      { timestamp: fiveHoursAgo, value: 1650 },
+      { timestamp: twoHoursAgo, value: 1750 },
+    ];
 
     await request(app)
       .post('/meter-reads/M1')
@@ -169,13 +179,12 @@ describe('ReadsController (e2e)', () => {
       .expect(HttpStatus.CREATED);
 
     await request(app)
-      .get('/meter-reads/M1/last')
+      .get('/meter-reads/M1/latest')
       .expect(200)
       .expect((res) => {
-        const reads = res.body as ReadDTO[];
-        expect(reads).to.have.length(1);
-        expect(reads[0].timestamp).to.equal(date);
-        expect(reads[0].value).to.equal(1750 * 10 ** 3);
+        const read = res.body as ReadDTO;
+        expect(read.timestamp).to.equal(latest);
+        expect(read.value).to.equal(1750 * 10 ** 3);
       });
   });
 });

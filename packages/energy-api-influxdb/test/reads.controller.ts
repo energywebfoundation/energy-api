@@ -39,12 +39,12 @@ export class ReadsController extends BaseReadsController {
     return super.getReadsAggregates(meterId, filter);
   }
 
-  @Get('/:meter/last')
-  public async getLastRead(
+  @Get('/:meter/latest')
+  public async getLatestRead(
     @Param('meter') meterId: string,
     @Query() filter: StartPeriodDTO,
   ) {
-    const res = await super.getLastRead(meterId, filter);
+    const res = await super.getLatestRead(meterId, filter);
     return res;
   }
 
