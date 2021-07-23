@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import {
   MeasurementDTO,
   ReadDTO,
@@ -9,6 +14,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, InfluxDB, Point } from '@influxdata/influxdb-client';
 import { Unit } from './unit.enum';
+import { AllowedDurationType } from './allowed-duration.type';
 
 @Injectable()
 export class ReadsService implements OnModuleInit {
@@ -85,7 +91,7 @@ export class ReadsService implements OnModuleInit {
     }
   }
 
-  public async find(meterId: string, filter: FilterDTO) {
+  public async find(meterId: string, filter: FilterDTO): Promise<ReadDTO[]> {
     try {
       const query = this.findByMeterQuery(meterId, filter);
 
@@ -96,7 +102,30 @@ export class ReadsService implements OnModuleInit {
     }
   }
 
-  public async findDifference(meterId: string, filter: FilterDTO) {
+  public async findLatestRead(
+    meterId: string,
+    startDuration?: AllowedDurationType,
+  ): Promise<ReadDTO> {
+    try {
+      const query = this.findLatestReadByMeterQuery(meterId, startDuration);
+
+      const reads = await this.execute(query);
+      if (reads.length === 0) {
+        throw new NotFoundException(
+          `Unable to get the latest reading. There are no readings yet for meter ${meterId}`,
+        );
+      }
+      return reads[0];
+    } catch (e) {
+      this.logger.error(e.message);
+      throw e;
+    }
+  }
+
+  public async findDifference(
+    meterId: string,
+    filter: FilterDTO,
+  ): Promise<ReadDTO[]> {
     try {
       const query = `${this.findByMeterQuery(meterId, filter)}
       |> difference()
@@ -109,12 +138,25 @@ export class ReadsService implements OnModuleInit {
     }
   }
 
-  private findByMeterQuery(meterId: string, filter: FilterDTO) {
+  private findByMeterQuery(meterId: string, filter: FilterDTO): string {
     return `
     from(bucket: "${this.bucket}")
     |> range(start: ${filter.start}, stop: ${filter.end})
     |> limit(n: ${filter.limit}, offset: ${filter.offset})
     |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
+    `;
+  }
+
+  public findLatestReadByMeterQuery(
+    meterId: string,
+    startDuration?: AllowedDurationType,
+  ): string {
+    const start = startDuration ? `-${startDuration}` : '-1d';
+    return `
+    from(bucket: "${this.bucket}")
+    |> range(start: ${start}, stop: now())
+    |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
+    |> last()
     `;
   }
 

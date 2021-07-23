@@ -11,7 +11,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { AggregateFilterDTO, FilterDTO, MeasurementDTO } from './dto';
+import {
+  AggregateFilterDTO,
+  FilterDTO,
+  MeasurementDTO,
+  StartPeriodDTO,
+} from './dto';
 import { ReadsService } from './reads.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -44,6 +49,15 @@ export abstract class BaseReadsController {
     @Query() filter: AggregateFilterDTO,
   ) {
     const res = await this.readsService.aggregate(meterId, filter);
+    return res;
+  }
+
+  @Get('/:meter/latest')
+  public async getLatestRead(
+    @Param('meter') meterId: string,
+    @Query() filter: StartPeriodDTO,
+  ) {
+    const res = await this.readsService.findLatestRead(meterId, filter?.start);
     return res;
   }
 
