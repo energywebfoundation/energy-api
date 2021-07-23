@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-app@0.2.3...@energyweb/energy-api-app@0.3.0) (2021-07-23)
+
+
+### Features
+
+* **energy-api-influxdb:** fetching last meter read ([f927a50](https://github.com/energywebfoundation/energy-api/commit/f927a505d5226baf0a3592c27d031f87f39fdcf3))
+
+
+
+
+
 ## [0.2.3](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-app@0.2.2...@energyweb/energy-api-app@0.2.3) (2021-06-16)
 
 **Note:** Version bump only for package @energyweb/energy-api-app
