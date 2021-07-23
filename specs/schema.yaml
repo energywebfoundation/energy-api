@@ -238,3 +238,24 @@ paths:
                   $ref: "#/components/schemas/AggregatedReadDTO"
       tags:
         - "meter-reads"
+  /meter-reads/{meter}/latest:
+    get:
+      operationId: "ReadsController_getLatestRead"
+      parameters:
+        - name: "meter"
+          required: true
+          in: "path"
+          schema:
+            type: "string"
+        - name: "start"
+          required: false
+          in: "query"
+          example: "1d"
+          description: "Start date since the last stored read. Must be one of these values: 1y, 1mo, 1w, 1d, 1h, 30m, 15m"
+          schema:
+            type: "string"
+      responses:
+        200:
+          description: ""
+      tags:
+        - "meter-reads"
