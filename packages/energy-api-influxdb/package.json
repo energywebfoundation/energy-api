@@ -45,7 +45,7 @@
     "lint-staged": "10.5.4",
     "luxon": "1.28.0",
     "mocha": "8.4.0",
-    "prettier": "2.2.1",
+    "prettier": "2.3.2",
     "superagent-use": "0.1.0",
     "supertest": "6.1.4",
     "supertest-capture-error": "1.0.0",
