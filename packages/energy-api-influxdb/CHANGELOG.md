@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-influxdb@0.8.0...@energyweb/energy-api-influxdb@0.8.1) (2021-10-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @influxdata/influxdb-client to v1.15.0 ([868faeb](https://github.com/energywebfoundation/energy-api/commit/868faeba5974ff1761b8c9ac6d28f4042bf7d468))
+* **deps:** update dependency @influxdata/influxdb-client to v1.16.0 ([c027edd](https://github.com/energywebfoundation/energy-api/commit/c027eddf375aa992b774403288b2708d18388b43))
+* **deps:** update dependency @influxdata/influxdb-client to v1.17.0 ([951a19e](https://github.com/energywebfoundation/energy-api/commit/951a19eb1bad80daf399c28534938d3c058a3608))
+* **deps:** update dependency @influxdata/influxdb-client to v1.18.0 ([915d6cb](https://github.com/energywebfoundation/energy-api/commit/915d6cb02dad54d9410e4b03cbd915094f0c89cc))
+* **deps:** update dependency @nestjs/swagger to v4.8.2 ([7161cae](https://github.com/energywebfoundation/energy-api/commit/7161cae1c107866e276802a0173eac5094ffb8d4))
+* **deps:** update dependency class-validator to v0.13.1 ([91de1d6](https://github.com/energywebfoundation/energy-api/commit/91de1d6771a73971b32e28f28e95e671ac9c0272))
+* **deps:** update dependency rxjs to v6.6.7 ([ec2c4ad](https://github.com/energywebfoundation/energy-api/commit/ec2c4ad7490add24ba7134ca4cb1b7061a3b77c0))
+
+
+
+
+
 # [0.8.0](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-influxdb@0.7.1...@energyweb/energy-api-influxdb@0.8.0) (2021-07-23)
 
 

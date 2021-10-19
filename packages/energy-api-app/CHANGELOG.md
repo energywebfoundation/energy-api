@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-app@0.3.0...@energyweb/energy-api-app@0.3.1) (2021-10-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @nestjs/swagger to v4.8.2 ([7161cae](https://github.com/energywebfoundation/energy-api/commit/7161cae1c107866e276802a0173eac5094ffb8d4))
+* **deps:** update dependency class-validator to v0.13.1 ([91de1d6](https://github.com/energywebfoundation/energy-api/commit/91de1d6771a73971b32e28f28e95e671ac9c0272))
+* **deps:** update dependency rxjs to v6.6.7 ([ec2c4ad](https://github.com/energywebfoundation/energy-api/commit/ec2c4ad7490add24ba7134ca4cb1b7061a3b77c0))
+* **deps:** update dependency swagger-ui-express to v4.1.6 ([b9f2451](https://github.com/energywebfoundation/energy-api/commit/b9f2451bdda7782cabbc782b2d00251a473e653d))
+
+
+
+
+
 # [0.3.0](https://github.com/energywebfoundation/energy-api/compare/@energyweb/energy-api-app@0.2.3...@energyweb/energy-api-app@0.3.0) (2021-07-23)
 
 
