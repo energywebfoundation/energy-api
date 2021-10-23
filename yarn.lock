@@ -166,10 +166,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
   integrity sha512-wdppn25U8z/2yiaT6YGquE6X8sSv7hNMWSXYSSU1jGv/yd6XqjXgTDJ8KP4NgjTXfJ3GbRjeeb8RTV7a/VpM+w==
 
-"@influxdata/influxdb-client@1.18.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@influxdata/influxdb-client/-/influxdb-client-1.18.0.tgz#e86d75b063d4c23ad094fb5dfa3b243731fe149a"
-  integrity sha512-0C2mKb5hR61WqiWzwEwqHvBkYzaFI4QLKaffGj3IPHoouKYoFQSCLHK5C3Jws25LopqWvellVimf12CsnZXzGg==
+"@influxdata/influxdb-client@1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@influxdata/influxdb-client/-/influxdb-client-1.19.0.tgz#42850c945a75c68bae5bdc91e49b4785acfe637a"
+  integrity sha512-fxQ+8XKPMKmJw2KaaWTScylQI18pG/hXpeJfhzWhtwZHa5VL5AFZMaCRW3utz1q+CqQN/9JD8nLKkehwaiyILg==
 
 "@lerna/add@3.21.0":
   version "3.21.0"

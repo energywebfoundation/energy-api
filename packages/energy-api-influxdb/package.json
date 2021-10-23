@@ -14,7 +14,7 @@
     "test:e2e": "mocha -r ts-node/register test/*.e2e-spec.ts --timeout 60000 --exit"
   },
   "dependencies": {
-    "@influxdata/influxdb-client": "1.18.0",
+    "@influxdata/influxdb-client": "1.19.0",
     "@nestjs/common": "8.1.1",
     "@nestjs/config": "1.0.2",
     "@nestjs/core": "8.1.1",
