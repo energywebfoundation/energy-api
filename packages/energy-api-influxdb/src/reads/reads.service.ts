@@ -5,16 +5,17 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import {
+  AggregatedReadDTO,
+  AggregateFilterDTO,
+  FilterDTO,
   MeasurementDTO,
   ReadDTO,
-  FilterDTO,
-  AggregateFilterDTO,
-  AggregatedReadDTO,
 } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, InfluxDB, Point } from '@influxdata/influxdb-client';
 import { Unit } from './unit.enum';
 import { AllowedDurationType } from './allowed-duration.type';
+import { addMilliseconds } from '../date.utils';
 
 @Injectable()
 export class ReadsService implements OnModuleInit {
@@ -77,7 +78,7 @@ export class ReadsService implements OnModuleInit {
     try {
       const query = `
       from(bucket: "${this.bucket}")
-      |> range(start: ${filter.start}, stop: ${filter.end})
+      ${this.getRangeFilter(filter.start, filter.end)}
       |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
       ${filter.difference ? '|> difference()' : ''}
       |> window(every: ${filter.window})
@@ -141,9 +142,20 @@ export class ReadsService implements OnModuleInit {
   private findByMeterQuery(meterId: string, filter: FilterDTO): string {
     return `
     from(bucket: "${this.bucket}")
-    |> range(start: ${filter.start}, stop: ${filter.end})
+    ${this.getRangeFilter(filter.start, filter.end)}
     |> limit(n: ${filter.limit}, offset: ${filter.offset})
     |> filter(fn: (r) => r.meter == "${meterId}" and r._field == "read")
+    `;
+  }
+
+  private getRangeFilter(start: string, end: string): string {
+    const endPlusOneMs = addMilliseconds(new Date(end), 1);
+
+    // Range doesn't include "end" into results for backward compatibility range is used
+    // and then dates are filtered by "filter" function to include "end" into results
+    return `
+      |> range(start: ${start}, stop: ${endPlusOneMs.toISOString()})
+      |> filter(fn: (r) => r._time >= ${start} and r._time <= ${end})
     `;
   }
 
