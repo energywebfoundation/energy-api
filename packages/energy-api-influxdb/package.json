@@ -1,6 +1,6 @@
 {
   "name": "@energyweb/energy-api-influxdb",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "",
   "author": "EnergyWeb DevHub GmbH; Piotr Kosinski, piotr.kosinski@energyweb.org",
   "license": "GPL-3.0-or-later",
